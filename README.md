@@ -6,12 +6,12 @@
 ### Usage
 ```javascript
 import {render} from "/scripts/rendering.js"
-import {createAction, createState, createReducer, dispatchAction, getGlobalState, setSelectors, useSelector, Store} from "/scripts/states.js"
+import {createAction, createGlobalState, createReducer, dispatchAction, getGlobalStates, setSelectors, useSelector, Store} from "/scripts/states.js"
 
-const authUserAction = createAction("userState/changeAuth", {isAuth: true})
-const userState = createState("userState", ({ isAuth: false }))
+const changeAuthAction = createAction("userState/changeAuth", {isAuth: true})
+const userState = createGlobalState("userState", ({ isAuth: false }))
 const userStateReducer = createReducer("userState", {
-  changeAuth(userState, action) => { ...userState, action.payload }
+  changeAuth: (userState, action) => ({ ...userState, ...action.payload })
 })
 
 export const App = () =>
@@ -27,7 +27,7 @@ export const UserLogin = (props, elem) => {
 
   return isAuth?
     <div>{props.logged}</div>:
-    <button onclick={() => dispatchAction(elem, authUserAction)}>{props.login}</button>
+    <button type="button" onclick={() => dispatchAction(elem, changeAuthAction)}>{props.login}</button>
 }
 
 render(<App></App>, document.body)
