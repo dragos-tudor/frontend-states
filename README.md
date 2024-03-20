@@ -22,12 +22,12 @@ export const App = () =>
 
 export const UserLogin = (props, elem) => {
   const selectors = setSelectors(elem)
-  const globalStates = getStoreStates(elem)
-  const isAuth = useSelector(selectors, "isAuth", (states) => states.userState.isAuth, globalStates)
+  const states = getStoreStates(elem)
+  const isAuth = useSelector(selectors, "isAuth", (states) => states.userState.isAuth, states)
 
   return isAuth?
     <div>{props.logged}</div>:
-    <button type="button" onclick={() => dispatchAction(elem, changeAuthAction)}>{props.login}</button>
+    <button onclick={() => dispatchAction(elem, changeAuthAction)}>{props.login}</button>
 }
 
 render(<App></App>, document.body)
