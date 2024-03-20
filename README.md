@@ -6,10 +6,10 @@
 ### Usage
 ```javascript
 import {render} from "/scripts/rendering.js"
-import {createAction, createGlobalState, createReducer, dispatchAction, getGlobalStates, setSelectors, useSelector, Store} from "/scripts/states.js"
+import {createAction, createStoreState, createReducer, dispatchAction, getStoreStates, setSelectors, useSelector, Store} from "/scripts/states.js"
 
 const changeAuthAction = createAction("userState/changeAuth", {isAuth: true})
-const userState = createGlobalState("userState", ({ isAuth: false }))
+const userState = createStoreState("userState", ({ isAuth: false }))
 const userStateReducer = createReducer("userState", {
   changeAuth: (userState, action) => ({ ...userState, ...action.payload })
 })
@@ -22,7 +22,7 @@ export const App = () =>
 
 export const UserLogin = (props, elem) => {
   const selectors = setSelectors(elem)
-  const globalStates = getGlobalStates(elem)
+  const globalStates = getStoreStates(elem)
   const isAuth = useSelector(selectors, "isAuth", (states) => states.userState.isAuth, globalStates)
 
   return isAuth?

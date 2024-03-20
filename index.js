@@ -36,12 +36,12 @@ const LibraryName = "states";
 const LogHeader = "[states]";
 const logInfo = (elem, ...args)=>isLogEnabled(elem, LibraryName) && console.info(LogHeader, ...args);
 const countObjectProps = (obj)=>Object.getOwnPropertyNames(obj).length;
-const reservedPropNames = [
+const ReservedPropNames = Object.freeze([
     "children"
-];
+]);
 const existsObject = (obj)=>obj != null;
 const isObjectType = (value)=>typeof value === "object" && value !== null;
-const isValidObjectPropName = (propName)=>!reservedPropNames.includes(propName);
+const isValidObjectPropName = (propName)=>!ReservedPropNames.includes(propName);
 const getObjectPropNames = (obj)=>Object.getOwnPropertyNames(obj).filter(isValidObjectPropName);
 const equalArraysLength = (arr1, arr2)=>arr1.length === arr2.length;
 const existsArray = (arr)=>arr != null;
@@ -205,5 +205,5 @@ export { createMiddleware as createMiddleware };
 export { createReducer as createReducer };
 export { setSelectors as setSelectors };
 export { useSelector as useSelector };
-export { createState as createGlobalState };
-export { getStates as getGlobalStates };
+export { createState as createStoreState };
+export { getStates as getStoreStates };
