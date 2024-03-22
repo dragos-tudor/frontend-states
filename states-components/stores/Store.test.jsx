@@ -1,5 +1,5 @@
 import { assertEquals, assertObjectMatch } from "/asserts.ts"
-import { getEffects, render, useEffect, update } from "/rendering.js"
+import { render, update } from "/rendering.js"
 import { createAction } from "../../states-actions/mod.js"
 import { createMiddleware, getMiddlewares } from "../../states-middlewares/mod.js"
 import { createReducer, getReducers } from "../../states-reducers/mod.js"
@@ -43,19 +43,21 @@ Deno.test("use global states => use stores", async (t) => {
 
   await t.step("store with states reducers and states selectors => dispatch action => selectors updated", async () => {
     const A = (_, elem) => {
-      const globalStates = getStates(elem)
+      const states = getStates(elem)
       const selectors = setSelectors(elem)
-      const selectedValue = useSelector(selectors, "selector", states => states.state + 2, globalStates)
+      const selectedValue = useSelector(selectors, "selector", states => states.state + 2, states)
 
       return <>{selectedValue}</>
     }
 
     const elem = render(
-      <Store
-        state={createState("state", 1)}
-        reducer={createReducer("state", {reduce: (state, action) => state + action.payload } )}>
-          <A></A>
-      </Store>)
+      <app>
+        <Store
+          state={createState("state", 1)}
+          reducer={createReducer("state", {reduce: (state, action) => state + action.payload } )}>
+        </Store>
+        <A></A>
+      </app>)
 
     dispatchAction(elem, createAction("state/reduce", 3))
     assertEquals(elem.textContent, "6")

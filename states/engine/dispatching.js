@@ -1,7 +1,7 @@
 import { validateAction } from "../../states-actions/mod.js"
 import { throwError, throwErrors } from "../../support-errors/mod.js"
 import { updateConsumers } from "../../states-consumers/mod.js"
-import { getHtmlName, validateHtmlElement } from "../../states-html/mod.js"
+import { getHtmlName, findHtmlRoot, validateHtmlElement } from "../../states-html/mod.js"
 import { logInfo } from "../../support-loggers/mod.js"
 import { chainMiddlewares, getMiddlewares } from "../../states-middlewares/mod.js"
 import { getReducers } from "../../states-reducers/mod.js"
@@ -28,5 +28,6 @@ export const dispatchAction = (elem, action) =>
   setStates(elem, reducedStates)
   logInfo(elem, "end dispatch action", action, "states", states, "reduces states", reducedStates)
 
-  return updateConsumers(elem)
+  const root = findHtmlRoot(elem)
+  return updateConsumers(root)
 }
