@@ -54,7 +54,7 @@ Deno.test("use global states => use stores", async (t) => {
       <Store
         state={createState("state", 1)}
         reducer={createReducer("state", {reduce: (state, action) => state + action.payload } )}>
-          <A __log={["rendering"]}></A>
+          <A></A>
       </Store>)
 
     dispatchAction(elem, createAction("state/reduce", 3))
