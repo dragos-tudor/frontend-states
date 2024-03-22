@@ -42,12 +42,12 @@ render(<App></App>, document.body)
 - state means one states slice.
 - reducer means one group of change state funcs.
 - states operations:
-  - `dispatchAction` if action reduced state is changed then update consumers.
+  - `dispatchAction` if action change states then update consumers.
   - `chainMiddlewares` send actions through middlewares chain.
   - `runAction` based on action type reduce state.
   - `updateConsumers`:
-    - when reduced state is different then previous state.
-    - when previous selectors values are different then reduced state selectors values.
+    - when reduced state is different than previous state.
+    - when previous selectors values are different than reduced state selectors values.
 
 
 ### [Components](./states-components/)
