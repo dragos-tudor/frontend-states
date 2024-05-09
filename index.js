@@ -22,6 +22,7 @@ const throwErrors = (messages)=>{
     throw new Error(messages.join(","));
 };
 const getHtmlChildren = (elem)=>Array.from(elem.children ?? []);
+const getHtmlBody = (elem)=>elem.ownerDocument.body;
 const getHtmlName = (elem)=>elem.tagName?.toLowerCase();
 const getHtmlParentElement = (elem)=>elem.parentElement;
 const flatHtmlChildren = (elems)=>elems.flatMap(getHtmlChildren);

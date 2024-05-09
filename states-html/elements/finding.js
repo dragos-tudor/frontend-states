@@ -1,5 +1,5 @@
 import { flatHtmlChildren } from "./flattening.js";
-import { getHtmlParentElement } from "./getting.js"
+import { getHtmlBody, getHtmlParentElement } from "./getting.js"
 import { existsHtmlElement, existsHtmlElements } from "./verifying.js";
 
 const findsHtmlDescendants = (elems, func, result = []) =>
