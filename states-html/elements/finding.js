@@ -1,17 +1,18 @@
-import { getHtmlBody, getHtmlParentElement } from "./getting.js"
+import { flatHtmlChildren } from "./flattening.js";
+import { getHtmlParentElement } from "./getting.js"
+import { existsHtmlElement, existsHtmlElements } from "./verifying.js";
 
-export const findHtmlAscendant = (elem, func) => {
-  if(func(elem)) return elem
-  if(!getHtmlParentElement(elem)) return undefined
-  return findHtmlAscendant(getHtmlParentElement(elem), func)
-}
+const findsHtmlDescendants = (elems, func, result = []) =>
+  (!existsHtmlElements(elems) && result) ||
+  findsHtmlDescendants(flatHtmlChildren(elems), func, [...result, ...elems.filter(func)])
 
-export const findHtmlDescendants = (elem, func, elems = []) => {
-  if(func(elem)) elems.push(elem)
-  for(let index = 0; index < elem.children.length; index++)
-    findHtmlDescendants(elem.children[index], func, elems)
-  return elems
-}
+export const findHtmlAscendant = (elem, func) =>
+  (existsHtmlElement(elem) || undefined) &&
+  (func(elem) && elem ||
+   findHtmlAscendant(getHtmlParentElement(elem), func))
+
+export const findHtmlDescendants = (elem, func) =>
+  findsHtmlDescendants([elem], func)
 
 export const findHtmlRoot = (elem) =>
   globalThis["Deno"]?
