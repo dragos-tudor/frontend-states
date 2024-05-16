@@ -34,8 +34,8 @@ render(<App></App>, document.body)
 ```
 
 ### Modules
-- main modules: states, states-components.
-- support modules: states-\*, support-\*.
+- high-level modules: states, states-components, states-consumers.
+- low-level modules: states-actions, states-html, states-middlewares, states-reducers, states-selectors, states-states, support-equalities, support-errors, support-loggers.
 
 ### [State](./states/)
 - main functionality: dispatch actions, reduce states, update states consumers.
