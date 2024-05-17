@@ -1,11 +1,10 @@
 import { validateAction } from "../../states-actions/mod.js"
-import { updateConsumers } from "../../states-consumers/mod.js"
+import { updateConsumers, logInfo } from "../../states-consumers/mod.js"
 import { getHtmlName, findHtmlRoot, validateHtmlElement } from "../../states-html/mod.js"
 import { chainMiddlewares, getMiddlewares } from "../../states-middlewares/mod.js"
 import { getReducers } from "../../states-reducers/mod.js"
 import { throwError, throwErrors } from "../../states-selectors/mod.js"
 import { getStates, setStates } from "../../states-states/mod.js"
-import { logInfo } from "../loggers/logging.js"
 import { runAction } from "./running.js"
 
 export const dispatchAction = (elem, action) =>

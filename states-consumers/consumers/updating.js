@@ -1,4 +1,4 @@
-import { logInfo } from "../../states/loggers/logging.js"
+import { logInfo } from "../loggers/logging.js"
 import { getHtmlName } from "../../states-html/mod.js"
 import { findConsumers } from "./finding.js"
 import { isUpdatableConsumer } from "./verifying.js"
