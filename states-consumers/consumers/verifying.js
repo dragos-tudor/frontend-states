@@ -1,4 +1,4 @@
-import { equalValues } from "../../support-equalities/mod.js";
+import { equalValues } from "../../states-equalities/mod.js"
 import { getSelectors } from "../../states-selectors/mod.js"
 import { getStates } from "../../states-states/mod.js"
 
