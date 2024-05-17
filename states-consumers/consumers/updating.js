@@ -1,7 +1,7 @@
-import { getHtmlName } from "../../states-html/mod.js";
-import { logInfo } from "../../support-loggers/mod.js";
-import { findConsumers } from "./finding.js";
-import { isUpdatableConsumer } from "./verifying.js";
+import { logInfo } from "../../states/loggers/logging.js"
+import { getHtmlName } from "../../states-html/mod.js"
+import { findConsumers } from "./finding.js"
+import { isUpdatableConsumer } from "./verifying.js"
 
 const getUpdateFunc = (elem) => elem?.ownerDocument.__update
 

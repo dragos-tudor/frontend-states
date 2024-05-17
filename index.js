@@ -21,6 +21,12 @@ const throwErrors = (messages)=>{
     if (!messages.length) return false;
     throw new Error(messages.join(","));
 };
+const isLogLibraryEnabled = (elem, libraryName)=>elem.__log.includes(libraryName);
+const isLogMounted = (elem)=>elem.__log instanceof Array;
+const isLogEnabled = (elem, libraryName)=>isLogMounted(elem) && isLogLibraryEnabled(elem, libraryName);
+const LibraryName = "states";
+const LogHeader = "[states]";
+const logInfo = (elem, ...args)=>isLogEnabled(elem, LibraryName) && console.info(LogHeader, ...args);
 const getHtmlChildren = (elem)=>Array.from(elem.children ?? []);
 const getHtmlBody = (elem)=>elem.ownerDocument.body;
 const getHtmlName = (elem)=>elem.tagName?.toLowerCase();
@@ -39,12 +45,6 @@ const findHtmlDescendants = (elem, func)=>findsHtmlDescendants([
     ], func);
 const findHtmlRoot = (elem)=>globalThis["Deno"] ? findHtmlAscendant(elem, (elem)=>!getHtmlParentElement(elem)) : getHtmlBody(elem);
 const validateHtmlElement = (elem)=>isHtmlElement(elem) ? "" : "Element type should be HTML element.";
-const isLogLibraryEnabled = (elem, libraryName)=>elem.__log.includes(libraryName);
-const isLogMounted = (elem)=>elem.__log instanceof Array;
-const isLogEnabled = (elem, libraryName)=>isLogMounted(elem) && isLogLibraryEnabled(elem, libraryName);
-const LibraryName = "states";
-const LogHeader = "[states]";
-const logInfo = (elem, ...args)=>isLogEnabled(elem, LibraryName) && console.info(LogHeader, ...args);
 const countObjectProps = (obj)=>Object.getOwnPropertyNames(obj).length;
 const ReservedPropNames = Object.freeze([
     "children"
