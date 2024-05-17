@@ -13,14 +13,6 @@ const validateAction = (action)=>[
         validateActionType(action),
         validateActionTypeFormat(action)
     ].filter((error)=>error);
-const throwError = (message)=>{
-    if (!message) return false;
-    throw new Error(message);
-};
-const throwErrors = (messages)=>{
-    if (!messages.length) return false;
-    throw new Error(messages.join(","));
-};
 const isLogLibraryEnabled = (elem, libraryName)=>elem.__log.includes(libraryName);
 const isLogMounted = (elem)=>elem.__log instanceof Array;
 const isLogEnabled = (elem, libraryName)=>isLogMounted(elem) && isLogLibraryEnabled(elem, libraryName);
@@ -81,6 +73,14 @@ const getSelectors = (elem)=>elem.__selectors;
 const setSelector = (selectors, selector)=>selectors[selector.name] = selector;
 const setSelectorValue = (selector, value)=>selector.value = value;
 const setSelectors = (elem, selectors = {})=>elem.__selectors = elem.__selectors || selectors;
+const throwError = (message)=>{
+    if (!message) return false;
+    throw new Error(message);
+};
+const throwErrors = (messages)=>{
+    if (!messages.length) return false;
+    throw new Error(messages.join(","));
+};
 const createSelector = (name, func, value)=>({
         name,
         func,

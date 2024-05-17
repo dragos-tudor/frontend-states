@@ -1,4 +1,4 @@
-import { throwError } from "../../support-errors/mod.js";
+import { throwError } from "../errors/throwing.js"
 import { createSelector } from "./creating.js"
 import { getSelector } from "./getting.js";
 import { setSelector, setSelectorValue } from "./setting.js"

@@ -1,1 +1,0 @@
-export { throwError, throwErrors } from "./errors/throwing.js"

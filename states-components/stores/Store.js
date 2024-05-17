@@ -1,7 +1,7 @@
-import { throwErrors } from "../../support-errors/mod.js"
 import { getStates, existsState, setStates, setState, validateState } from "../../states-states/mod.js"
 import { getReducers, existsReducer, setReducers, setReducer, validateReducer } from "../../states-reducers/mod.js"
 import { getMiddlewares, existsMiddleware, setMiddlewares, setMiddleware, validateMiddleware } from "../../states-middlewares/mod.js"
+import { throwErrors } from "../../states-selectors/mod.js"
 
 export const Store = (props, elem) =>
 {
