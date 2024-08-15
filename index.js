@@ -13,12 +13,6 @@ const validateAction = (action)=>[
         validateActionType(action),
         validateActionTypeFormat(action)
     ].filter((error)=>error);
-const isLogLibraryEnabled = (elem, libraryName)=>elem.__log.includes(libraryName);
-const isLogMounted = (elem)=>elem.__log instanceof Array;
-const isLogEnabled = (elem, libraryName)=>isLogMounted(elem) && isLogLibraryEnabled(elem, libraryName);
-const LibraryName = "states";
-const LogHeader = "[states]";
-const logInfo = (elem, ...args)=>isLogEnabled(elem, LibraryName) && console.info(LogHeader, ...args);
 const getHtmlChildren = (elem)=>Array.from(elem.children ?? []);
 const getHtmlBody = (elem)=>elem.ownerDocument.body;
 const getHtmlName = (elem)=>elem.tagName?.toLowerCase();
@@ -37,87 +31,6 @@ const findHtmlDescendants = (elem, func)=>findsHtmlDescendants([
     ], func);
 const findHtmlRoot = (elem)=>globalThis["Deno"] ? findHtmlAscendant(elem, (elem)=>!getHtmlParentElement(elem)) : getHtmlBody(elem);
 const validateHtmlElement = (elem)=>isHtmlElement(elem) ? "" : "Element type should be HTML element.";
-const countObjectProps = (obj)=>Object.getOwnPropertyNames(obj).length;
-const ReservedPropNames = Object.freeze([
-    "children"
-]);
-const existsObject = (obj)=>obj != null;
-const isObjectType = (value)=>typeof value === "object" && value !== null;
-const isValidObjectPropName = (propName)=>!ReservedPropNames.includes(propName);
-const getObjectPropNames = (obj)=>Object.getOwnPropertyNames(obj).filter(isValidObjectPropName);
-const equalArraysLength = (arr1, arr2)=>arr1.length === arr2.length;
-const existsArray = (arr)=>arr != null;
-const isArrayType = (value)=>value instanceof Array;
-const isFunctionType = (value)=>typeof value === "function";
-const equalArrays = (arr1, arr2)=>{
-    if (!existsArray(arr1) || !existsArray(arr2)) return arr1 === arr2;
-    if (!equalArraysLength(arr1, arr2)) return false;
-    for(let index = 0; index < arr1.length; index++)if (!equalValues(arr1[index], arr2[index])) return false;
-    return true;
-};
-const equalValues = (value1, value2)=>{
-    if (isFunctionType(value1) && isFunctionType(value2)) return true;
-    if (isArrayType(value1) && isArrayType(value2)) return equalArrays(value1, value2);
-    if (isObjectType(value1) && isObjectType(value2)) return equalObjects(value1, value2);
-    return value1 === value2;
-};
-const equalObjectsProp = (obj1, obj2, propName)=>equalValues(obj1[propName], obj2[propName]);
-const equalObjectsProps = (obj1, obj2)=>getObjectPropNames(obj1).every((propName)=>equalObjectsProp(obj1, obj2, propName));
-const equalObjects = (obj1, obj2)=>{
-    if (!existsObject(obj1) || !existsObject(obj2)) return obj1 === obj2;
-    if (countObjectProps(obj1) !== countObjectProps(obj2)) return false;
-    return equalObjectsProps(obj1, obj2);
-};
-const getSelector = (selectors, name)=>selectors[name];
-const getSelectors = (elem)=>elem.__selectors;
-const setSelector = (selectors, selector)=>selectors[selector.name] = selector;
-const setSelectorValue = (selector, value)=>selector.value = value;
-const setSelectors = (elem, selectors = {})=>elem.__selectors = elem.__selectors || selectors;
-const throwError = (message)=>{
-    if (!message) return false;
-    throw new Error(message);
-};
-const throwErrors = (messages)=>{
-    if (!messages.length) return false;
-    throw new Error(messages.join(","));
-};
-const createSelector = (name, func, value)=>({
-        name,
-        func,
-        value
-    });
-const isFunctionSelectorFunc = (func)=>typeof func === "function";
-const isStringSelectorName = (name)=>typeof name === "string";
-const validateSelectorFunc = (func)=>isFunctionSelectorFunc(func) ? "" : "Selector func should be function.";
-const validateSelectorName = (name)=>isStringSelectorName(name) ? "" : "Selector name should be string.";
-const useSelector = (selectors, name, func, states)=>{
-    throwError(validateSelectorFunc(func));
-    throwError(validateSelectorName(name));
-    const value = func(states);
-    getSelector(selectors, name) ? setSelectorValue(getSelector(selectors, name), value) : setSelector(selectors, createSelector(name, func, value));
-    return value;
-};
-const StateType = Symbol("state");
-const createState = (name, data)=>Object.freeze({
-        name,
-        data,
-        $type: StateType
-    });
-const getState = (states, name)=>states[name];
-const getStates = (elem)=>elem.ownerDocument.__states;
-const setState = (states, state)=>states[state.name] = state.data;
-const setStates = (elem, states = {})=>elem.ownerDocument.__states = states;
-const existsState = (states, name)=>!!getState(states, name);
-const isStateType = (reducers)=>reducers.$type === StateType;
-const validateStateType = (state)=>isStateType(state) ? "" : "State type should be state [use createState].";
-const validateState = (state)=>validateStateType(state);
-const isStateChanged = (elem)=>(selector)=>!equalValues(selector.value, selector.func(getStates(elem)));
-const isConsumer = (elem)=>!!getSelectors(elem);
-const isUpdatableConsumer = (elem)=>Object.values(getSelectors(elem)).filter(isStateChanged(elem)).some((elem)=>elem);
-const findConsumers = (elem)=>findHtmlDescendants(elem, isConsumer);
-const getUpdateFunc = (elem)=>elem?.ownerDocument.__update;
-const updateConsumer = (update)=>(elem)=>(logInfo(elem, "update global states consumer:", getHtmlName(elem)), update(elem)[0]);
-const updateConsumers = (elem, update = getUpdateFunc(elem))=>findConsumers(elem).filter(isUpdatableConsumer).map(updateConsumer(update));
 const MiddlewareType = Symbol("middleware");
 const createMiddleware = (name, func)=>Object.freeze({
         name,
@@ -163,6 +76,98 @@ const validateReducer = (reducer)=>[
         validateReducerName(reducer),
         validateReducerFuncs(reducer)
     ].filter((error)=>error);
+const StateType = Symbol("state");
+const createState = (name, data)=>Object.freeze({
+        name,
+        data,
+        $type: StateType
+    });
+const getState = (states, name)=>states[name];
+const getStates = (elem)=>elem.ownerDocument.__states;
+const setState = (states, state)=>states[state.name] = state.data;
+const setStates = (elem, states = {})=>elem.ownerDocument.__states = states;
+const existsState = (states, name)=>!!getState(states, name);
+const isStateType = (reducers)=>reducers.$type === StateType;
+const validateStateType = (state)=>isStateType(state) ? "" : "State type should be state [use createState].";
+const validateState = (state)=>validateStateType(state);
+const getUpdateFunc = (elem)=>elem?.ownerDocument.__update;
+const isLogLibraryEnabled = (elem, libraryName)=>elem.__log.includes(libraryName);
+const isLogMounted = (elem)=>elem.__log instanceof Array;
+const isLogEnabled = (elem, libraryName)=>isLogMounted(elem) && isLogLibraryEnabled(elem, libraryName);
+const LibraryName = "states";
+const LogHeader = "[states]";
+const logInfo = (elem, ...args)=>isLogEnabled(elem, LibraryName) && console.info(LogHeader, ...args);
+const countObjectProps = (obj)=>Object.getOwnPropertyNames(obj).length;
+const ReservedPropNames = Object.freeze([
+    "children"
+]);
+const existsObject = (obj)=>obj != null;
+const isObjectType = (value)=>typeof value === "object" && value !== null;
+const isValidObjectPropName = (propName)=>!ReservedPropNames.includes(propName);
+const getObjectPropNames = (obj)=>Object.getOwnPropertyNames(obj).filter(isValidObjectPropName);
+const equalArraysLength = (arr1, arr2)=>arr1.length === arr2.length;
+const existsArray = (arr)=>arr != null;
+const isArrayType = (value)=>value instanceof Array;
+const isFunctionType = (value)=>typeof value === "function";
+const equalArrays = (arr1, arr2)=>{
+    if (!existsArray(arr1) || !existsArray(arr2)) return arr1 === arr2;
+    if (!equalArraysLength(arr1, arr2)) return false;
+    for(let index = 0; index < arr1.length; index++)if (!equalValues(arr1[index], arr2[index])) return false;
+    return true;
+};
+const equalValues = (value1, value2)=>{
+    if (isFunctionType(value1) && isFunctionType(value2)) return true;
+    if (isArrayType(value1) && isArrayType(value2)) return equalArrays(value1, value2);
+    if (isObjectType(value1) && isObjectType(value2)) return equalObjects(value1, value2);
+    return value1 === value2;
+};
+const equalObjectsProp = (obj1, obj2, propName)=>equalValues(obj1[propName], obj2[propName]);
+const equalObjectsProps = (obj1, obj2)=>getObjectPropNames(obj1).every((propName)=>equalObjectsProp(obj1, obj2, propName));
+const equalObjects = (obj1, obj2)=>{
+    if (!existsObject(obj1) || !existsObject(obj2)) return obj1 === obj2;
+    if (countObjectProps(obj1) !== countObjectProps(obj2)) return false;
+    return equalObjectsProps(obj1, obj2);
+};
+const getSelector = (selectors, name)=>selectors[name];
+const getSelectors = (elem)=>elem.__selectors;
+const setSelector = (selectors, selector)=>selectors[selector.name] = selector;
+const setSelectorValue = (selector, value)=>selector.value = value;
+const setSelectors = (elem, selectors = {})=>elem.__selectors = elem.__selectors || selectors;
+const throwError = (message)=>{
+    if (!message) return false;
+    throw new Error(message);
+};
+const createSelector = (name, func, value)=>({
+        name,
+        func,
+        value
+    });
+const isFunctionSelectorFunc = (func)=>typeof func === "function";
+const isStringSelectorName = (name)=>typeof name === "string";
+const validateSelectorFunc = (func)=>isFunctionSelectorFunc(func) ? "" : "Selector func should be function.";
+const validateSelectorName = (name)=>isStringSelectorName(name) ? "" : "Selector name should be string.";
+const useSelector = (selectors, name, func, states)=>{
+    throwError(validateSelectorFunc(func));
+    throwError(validateSelectorName(name));
+    const value = func(states);
+    getSelector(selectors, name) ? setSelectorValue(getSelector(selectors, name), value) : setSelector(selectors, createSelector(name, func, value));
+    return value;
+};
+const isStateChanged = (elem)=>(selector)=>!equalValues(selector.value, selector.func(getStates(elem)));
+const isConsumer = (elem)=>!!getSelectors(elem);
+const isUpdatableConsumer = (elem)=>Object.values(getSelectors(elem)).filter(isStateChanged(elem)).some((elem)=>elem);
+const findConsumers = (elem)=>findHtmlDescendants(elem, isConsumer);
+const findUpdatableConsumers = (elem)=>findConsumers(elem).filter(isUpdatableConsumer);
+const updateConsumer = (update)=>(elem)=>(logInfo(elem, "update global states consumer:", getHtmlName(elem)), update(elem)[0]);
+const updateConsumers = (elem, update = getUpdateFunc(elem))=>findUpdatableConsumers(elem).map(updateConsumer(update));
+const throwError1 = (message)=>{
+    if (!message) return false;
+    throw new Error(message);
+};
+const throwErrors = (messages)=>{
+    if (!messages.length) return false;
+    throw new Error(messages.join(","));
+};
 const runAction = (action, reducers, states)=>{
     const [stateName, reducerFuncName] = splitActionType(action.type);
     const state = states?.[stateName];
@@ -176,7 +181,7 @@ const runAction = (action, reducers, states)=>{
     };
 };
 const dispatchAction = (elem, action)=>{
-    throwError(validateHtmlElement(elem));
+    throwError1(validateHtmlElement(elem));
     throwErrors(validateAction(action));
     logInfo(elem, "start dispatch action", action, "elem", getHtmlName(elem));
     const middlewares = getMiddlewares(elem);
@@ -194,21 +199,25 @@ const dispatchAction = (elem, action)=>{
     return updateConsumers(root);
 };
 export { dispatchAction as dispatchAction };
+const throwErrors1 = (messages)=>{
+    if (!messages.length) return false;
+    throw new Error(messages.join(","));
+};
 const Store = (props, elem)=>{
     const { reducer, state, middleware } = props;
     const middlewares = getMiddlewares(elem) || setMiddlewares(elem);
     const reducers = getReducers(elem) || setReducers(elem);
     const states = getStates(elem) || setStates(elem);
     if (reducer) {
-        throwErrors(validateReducer(reducer));
+        throwErrors1(validateReducer(reducer));
         existsReducer(reducers, reducer.name) || setReducer(reducers, reducer);
     }
     if (state) {
-        throwErrors(validateState(state));
+        throwErrors1(validateState(state));
         existsState(states, state.name) || setState(states, state);
     }
     if (middleware) {
-        throwErrors(validateMiddleware(middleware));
+        throwErrors1(validateMiddleware(middleware));
         existsMiddleware(middlewares, middleware.name) || setMiddleware(middlewares, middleware);
     }
     return props.children;

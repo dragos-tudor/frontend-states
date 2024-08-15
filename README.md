@@ -35,9 +35,8 @@ render(<App></App>, document.body)
 
 ### Modules
 - *high-level modules*: states, states-components.
-- *middle-level modules*: states-consumers, states-selectors.
-- *low-level modules*: states-actions, states-html, states-middlewares, states-reducers, states-states, states-equalities.
-- *simple architecture* design: all *low-level modules* **are independently** of each other.
+- *low-level modules*: states-actions, states-html, states-middlewares, states-reducers, states-states, states-selectors, states-equalities.
+- *low-level modules* completely independent ["parallel" modules].
 
 ### [State](./states/)
 - main functionality: dispatch actions, reduce states, update states consumers.

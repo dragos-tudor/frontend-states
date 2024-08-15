@@ -1,3 +1,3 @@
-export { getHtmlName } from "./elements/getting.js"
-export { findHtmlDescendants, findHtmlRoot } from "./elements/finding.js"
-export { validateHtmlElement } from "./elements/validating.js"
+export * from "./elements/getting.js"
+export * from "./elements/finding.js"
+export * from "./elements/validating.js"

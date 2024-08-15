@@ -1,3 +1,3 @@
-export { createAction } from "./actions/creating.js"
-export { splitActionType } from "./actions/splitting.js"
-export { validateAction } from "./actions/validating.js"
+export * from "./actions/creating.js"
+export * from "./actions/splitting.js"
+export * from "./actions/validating.js"

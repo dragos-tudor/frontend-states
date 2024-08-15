@@ -1,1 +1,1 @@
-export { dispatchAction } from "./engine/dispatching.js"
+export { dispatchAction } from "./actions/dispatching.js"
