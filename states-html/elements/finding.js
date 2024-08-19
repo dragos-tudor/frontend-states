@@ -1,20 +1,19 @@
-import { flatHtmlChildren } from "./flattening.js";
-import { getHtmlBody, getHtmlParentElement } from "./getting.js"
-import { existsHtmlElement, existsHtmlElements } from "./verifying.js";
-
-const findsHtmlDescendants = (elems, func, result = []) =>
-  (!existsHtmlElements(elems) && result) ||
-  findsHtmlDescendants(flatHtmlChildren(elems), func, [...result, ...elems.filter(func)])
+import { getHtmlBody, getHtmlChildren, getHtmlParentElement } from "./getting.js"
+import { findBreadthHtmlDescendants, findBreadthHtmlDescendant } from "./finding.breadth.js"
+import { existsHtmlElement } from "./verifying.js"
 
 export const findHtmlAscendant = (elem, func) =>
-  (existsHtmlElement(elem) || undefined) &&
-  (func(elem) && elem ||
-   findHtmlAscendant(getHtmlParentElement(elem), func))
+{
+  if (!existsHtmlElement(elem)) return undefined
+  if (func(elem)) return elem
+  return findHtmlAscendant(getHtmlParentElement(elem), func)
+}
 
-export const findHtmlDescendants = (elem, func) =>
-  findsHtmlDescendants([elem], func)
+export const findHtmlDescendant = (elem, func, findStrategy = findBreadthHtmlDescendant) =>
+  func(elem)? elem: findStrategy(getHtmlChildren(elem), func)
+
+export const findHtmlDescendants = (elem, func, result = [], findStrategy = findBreadthHtmlDescendants) =>
+  (func(elem) && result.push(elem), findStrategy(getHtmlChildren(elem), func, result))
 
 export const findHtmlRoot = (elem) =>
-  globalThis["Deno"]?
-    findHtmlAscendant(elem, (elem) => !getHtmlParentElement(elem)):
-    getHtmlBody(elem)
+  globalThis["Deno"]? findHtmlAscendant(elem, (elem) => !getHtmlParentElement(elem)): getHtmlBody(elem)
