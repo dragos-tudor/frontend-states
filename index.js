@@ -36,7 +36,7 @@ const findHtmlAscendant = (elem, func)=>{
     if (func(elem)) return elem;
     return findHtmlAscendant(getHtmlParentElement(elem), func);
 };
-const findHtmlDescendants = (elem, func, result = [], findStrategy = findBreadthHtmlDescendants)=>(func(elem) && result.push(elem), findStrategy(getHtmlChildren(elem), func, result));
+const findHtmlDescendants = (elem, func, result = [], findStrategy = findBreadthHtmlDescendants)=>findStrategy(getHtmlChildren(elem), func, result);
 const findHtmlRoot = (elem)=>globalThis["Deno"] ? findHtmlAscendant(elem, (elem)=>!getHtmlParentElement(elem)) : getHtmlBody(elem);
 const validateHtmlElement = (elem)=>isHtmlElement(elem) ? "" : "Element type should be HTML element.";
 const MiddlewareType = Symbol("middleware");
