@@ -6,7 +6,7 @@ import { createReducer, getReducers } from "../../states-reducers/mod.js"
 import { createState, getStates } from "../../states-states/mod.js"
 import { setSelectors, useSelector } from "../../states-selectors/mod.js"
 import { dispatchAction } from "../../states/mod.js"
-import { Store } from "./Store.js"
+import { Store } from "./store.js"
 
 Deno.test("use global states => use stores", async (t) => {
 
