@@ -3,5 +3,9 @@
   "tasks": {
     "bundle": "deno run --allow-all --no-check ./bundling.js",
     "test": "deno test --allow-all --no-check  --parallel"
+  },
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "/jsx"
   }
 }
