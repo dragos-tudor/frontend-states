@@ -1,5 +1,5 @@
 import { assertEquals, assertThrows } from "/asserts.ts"
-import { render, unrender } from "/rendering.js"
+import { registerLinkeDomParser, render, unrender } from "/rendering.js"
 import { spy, assertSpyCallArgs } from "/mock.ts"
 import { createAction } from "../../states-actions/mod.js"
 import { createReducer, setReducers, setReducer } from "../../states-reducers/mod.js"
@@ -7,6 +7,8 @@ import { createState, setStates, setState, getStates as getGlobalStates } from "
 import { getSelectors, setSelectors, useSelector } from "../../states-selectors/mod.js"
 import { createMiddleware, getMiddlewares, setMiddlewares, setMiddleware } from "../../states-middlewares/mod.js"
 import { dispatchAction } from "./dispatching.js"
+
+await registerLinkeDomParser()
 
 Deno.test("propagate changed states => dispatch actions", async (t) => {
 

@@ -1,9 +1,10 @@
 import { assertEquals } from "/asserts.ts"
-import { render } from "/rendering.js"
+import { registerLinkeDomParser, render } from "/rendering.js"
 import { useSelector } from "./using.js"
 import { createState } from "../../states-states/mod.js";
 import { setSelectors } from "./setting.js";
 
+await registerLinkeDomParser()
 
 Deno.test("use global states => use selectors", async (t) => {
 

@@ -1,5 +1,5 @@
 import { assertEquals, assertObjectMatch } from "/asserts.ts"
-import { render, update } from "/rendering.js"
+import { registerLinkeDomParser, render, update } from "/rendering.js"
 import { createAction } from "../../states-actions/mod.js"
 import { createMiddleware, getMiddlewares } from "../../states-middlewares/mod.js"
 import { createReducer, getReducers } from "../../states-reducers/mod.js"
@@ -7,6 +7,8 @@ import { createState, getStates } from "../../states-states/mod.js"
 import { setSelectors, useSelector } from "../../states-selectors/mod.js"
 import { dispatchAction } from "../../states/mod.js"
 import { Store } from "./store.js"
+
+await registerLinkeDomParser()
 
 Deno.test("use global states => use stores", async (t) => {
 
