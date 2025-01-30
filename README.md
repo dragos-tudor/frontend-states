@@ -6,7 +6,7 @@
 ### Usage
 ```javascript
 import {render} from "/scripts/rendering.js"
-import {createAction, createStoreState, createReducer, dispatchAction, getStoreStates, setSelectors, useSelector, Store} from "/scripts/states.js"
+import {createAction, createStoreState, createReducer, dispatchAction, getGlobalStates, setSelectors, useSelector, Store} from "/scripts/states.js"
 
 const changeAuthAction = createAction("userState/changeAuth", {isAuth: true})
 const userState = createStoreState("userState", ({ isAuth: false }))
@@ -22,8 +22,8 @@ export const App = () =>
 
 export const UserLogin = (props, elem) => {
   const selectors = setSelectors(elem)
-  const states = getStoreStates(elem)
-  const isAuth = useSelector(selectors, "isAuth", (states) => states.userState.isAuth, states)
+  const globalStates = getGlobalStates(elem)
+  const isAuth = useSelector(selectors, "isAuth", (states) => states.userState.isAuth, globalStates)
 
   return isAuth?
     <div>{props.logged}</div>:

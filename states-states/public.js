@@ -1,2 +1,2 @@
 export { createState as createStoreState } from "./states/creating.js"
-export { getStates as getStoreStates } from "./states/getting.js"
+export { getStates as getGlobalStates } from "./states/getting.js"

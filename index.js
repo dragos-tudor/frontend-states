@@ -237,4 +237,4 @@ export { createReducer as createReducer };
 export { setSelectors as setSelectors };
 export { useSelector as useSelector };
 export { createState as createStoreState };
-export { getStates as getStoreStates };
+export { getStates as getGlobalStates };
