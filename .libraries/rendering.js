@@ -168,7 +168,7 @@ const isJsxFactory = (elem)=>typeof elem.type === "function";
 const getJsxFragmentName = ()=>"fragment";
 const getJsxText = (value)=>isJsxText(value) && value?.toString();
 const getJsxTextName = ()=>"text";
-const getJsxElement = (store)=>store.__elem;
+const getJsxElement = (globalState)=>globalState.__elem;
 const getJsxElementKey = (elem)=>elem.key;
 const getJsxElementName = (elem)=>elem.type;
 const getJsxElementProps = (elem)=>elem.props;
@@ -184,7 +184,7 @@ const createJsxElement = (type, props, key, parent, ref)=>({
         ref,
         _owner: parent
     });
-const storeJsxElement = (store, elem)=>store.__elem = elem;
+const globalStateJsxElement = (globalState, elem)=>globalState.__elem = elem;
 const validateJsxElement = (elem)=>isJsxType(elem) ? "" : "Element should be jsx element.";
 const sanitizeJsxPropsChildren = (props, children)=>({
         ...props,
@@ -417,19 +417,19 @@ const isFunctionHtmlPropValue = (props, propName)=>typeof props[propName] === "f
 const isHtmlEventHandlerName = (propName)=>propName.startsWith("on");
 const getHtmlPropNames1 = (props)=>Object.getOwnPropertyNames(props);
 const getValidHtmlEventHandlerNames = (props)=>getHtmlPropNames1(props).filter(isHtmlEventHandlerName).filter((propName)=>isFunctionHtmlPropValue(props, propName));
-const getEventHandlerStoreName = (handlerName)=>"__" + handlerName;
-const getEventHandlerFromStore = (elem, handlerName)=>elem[getEventHandlerStoreName(handlerName)];
-const storeHtmlEventHandler = (elem, handlerName, handler)=>elem[getEventHandlerStoreName(handlerName)] = handler;
+const getEventHandlerGlobalStateName = (handlerName)=>"__" + handlerName;
+const getEventHandlerFromGlobalState = (elem, handlerName)=>elem[getEventHandlerGlobalStateName(handlerName)];
+const globalStateHtmlEventHandler = (elem, handlerName, handler)=>elem[getEventHandlerGlobalStateName(handlerName)] = handler;
 const setHtmlEventHandler = (elem, handlerName, handler)=>{
     elem.addEventListener(getHtmlEventName(handlerName), handler);
-    storeHtmlEventHandler(elem, handlerName, handler);
+    globalStateHtmlEventHandler(elem, handlerName, handler);
     return handlerName;
 };
 const setHtmlEventHandlers = (elem, props)=>getValidHtmlEventHandlerNames(props).map((handlerName)=>setHtmlEventHandler(elem, handlerName, props[handlerName]));
-const unstoreHtmlEventHandler = (elem, handlerName)=>delete elem[getEventHandlerStoreName(handlerName)];
+const unglobalStateHtmlEventHandler = (elem, handlerName)=>delete elem[getEventHandlerGlobalStateName(handlerName)];
 const unsetHtmlEventHandler = (elem, handlerName)=>{
-    elem.removeEventListener(getHtmlEventName(handlerName), getEventHandlerFromStore(elem, handlerName));
-    unstoreHtmlEventHandler(elem, handlerName);
+    elem.removeEventListener(getHtmlEventName(handlerName), getEventHandlerFromGlobalState(elem, handlerName));
+    unglobalStateHtmlEventHandler(elem, handlerName);
     return handlerName;
 };
 const unsetHtmlEventHandlers = (elem, props)=>getValidHtmlEventHandlerNames(props).map((handlerName)=>unsetHtmlEventHandler(elem, handlerName));
@@ -477,7 +477,7 @@ const renderElement = (elem, $parent)=>{
     setHtmlEventHandlers($elem, props);
     enableIgnoring($elem, $parent);
     enableLogging($elem, $parent);
-    storeJsxElement($elem, elem);
+    globalStateJsxElement($elem, elem);
     logElement($elem, "render");
     return $elem;
 };
@@ -526,7 +526,7 @@ const updateElement = (elem, $elem)=>{
     setHtmlAttrs($elem, props);
     setHtmlProps($elem, props);
     setHtmlEventHandlers($elem, props);
-    storeJsxElement($elem, elem);
+    globalStateJsxElement($elem, elem);
     return $elem;
 };
 const unrenderElement = ($elem)=>{

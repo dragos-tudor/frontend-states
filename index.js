@@ -211,7 +211,7 @@ const throwErrors1 = (messages)=>{
     if (!messages.length) return false;
     throw new Error(messages.join(","));
 };
-const Store = (props, elem)=>{
+const Global_State = (props, elem)=>{
     const { reducer, state, middleware } = props;
     const middlewares = getMiddlewares(elem) || setMiddlewares(elem);
     const reducers = getReducers(elem) || setReducers(elem);
@@ -230,11 +230,11 @@ const Store = (props, elem)=>{
     }
     return props.children;
 };
-export { Store as Store };
+export { Global_State as Global_State };
 export { createAction as createAction };
 export { createMiddleware as createMiddleware };
 export { createReducer as createReducer };
 export { setSelectors as setSelectors };
 export { useSelector as useSelector };
-export { createState as createStoreState };
+export { createState as createGlobalState };
 export { getStates as getGlobalStates };

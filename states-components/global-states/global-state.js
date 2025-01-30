@@ -3,7 +3,7 @@ import { getReducers, existsReducer, setReducers, setReducer, validateReducer } 
 import { getMiddlewares, existsMiddleware, setMiddlewares, setMiddleware, validateMiddleware } from "../../states-middlewares/mod.js"
 import { throwErrors } from "../errors/throwing.js"
 
-export const Store = (props, elem) =>
+export const Global_State = (props, elem) =>
 {
   const {reducer, state, middleware} = props
   const middlewares = getMiddlewares(elem) || setMiddlewares(elem)

@@ -13,7 +13,7 @@ const createJsxElement = (type, props, key, parent, ref)=>({
         ref,
         _owner: parent
     });
-const getJsxInternals = (store)=>store?.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+const getJsxInternals = (globalState)=>globalState?.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
 const getJsxParent = (internals)=>internals?.ReactCurrentOwner?.current;
 const getJsxPropsKey = (props)=>props.key;
 const getJsxPropNames = (props)=>Object.getOwnPropertyNames(props);

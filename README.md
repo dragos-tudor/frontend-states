@@ -6,21 +6,21 @@
 ### Usage
 ```javascript
 import {render} from "/scripts/rendering.js"
-import {createAction, createStoreState, createReducer, dispatchAction, getGlobalStates, setSelectors, useSelector, Store} from "/scripts/states.js"
+import {createAction, createGlobalState, createReducer, dispatchAction, getGlobalStates, setSelectors, useSelector, Global_State} from "/scripts/states.js"
 
 const changeAuthAction = createAction("userState/changeAuth", {isAuth: true})
-const userState = createStoreState("userState", ({ isAuth: false }))
+const userState = createGlobalState("userState", ({ isAuth: false }))
 const userStateReducer = createReducer("userState", {
   changeAuth: (userState, action) => ({ ...userState, ...action.payload })
 })
 
 export const App = () =>
   <main>
-    <Store state={userState} reducer={userStateReducer}></Store>
-    <UserLogin logged="Logged in" login="Login"></UserLogin>
+    <Global_State state={userState} reducer={userStateReducer}></Global_State>
+    <User_Login logged="Logged in" login="Login"></User_Login>
   </main>
 
-export const UserLogin = (props, elem) => {
+export const User_Login = (props, elem) => {
   const selectors = setSelectors(elem)
   const globalStates = getGlobalStates(elem)
   const isAuth = useSelector(selectors, "isAuth", (states) => states.userState.isAuth, globalStates)
@@ -53,4 +53,4 @@ render(<App></App>, document.body)
 
 ### [Components](./states-components/)
 - main functionality: implement states components.
-  - `Store`: register state, state reducer, actions middleware.
+  - `Global_State`: register global state, state reducer, actions middleware.

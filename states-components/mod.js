@@ -1,1 +1,1 @@
-export { Store } from "./stores/store.js"
+export { Global_State } from "./global-states/global-state.js"
